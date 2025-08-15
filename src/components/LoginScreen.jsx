@@ -188,33 +188,13 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}login/`,
-        { email, password }
-      );
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login/`, { email, password });
 
       login(res.data);
       navigate("/dashboard");
     } catch (error) {
-      const hardcodedEmail = "admin@gbu.ac.in";
-      const hardcodedPassword = "admin123";
-
-      if (email === hardcodedEmail && password === hardcodedPassword) {
-        const fakeUserData = {
-          token: "hardcoded-token",
-          user: {
-            name: "Admin",
-            email: hardcodedEmail,
-            role: "admin"
-          }
-        };
-
-        login(fakeUserData);
-        navigate("/dashboard");
-      } else {
-        console.error("Login failed:", error);
-        setLoginError("Invalid email or password. Please try again.");
-      }
+      console.error("Login failed:", error);
+      setLoginError(error.response?.data?.detail || "Invalid email or password. Please try again.");
     }
   };
 
@@ -318,7 +298,7 @@ const LoginScreen = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="w-full">
-                  <div className="inline-flex h-10 items-center justify-center rounded-md bg-blue-50 p-1 text-gray-500 grid w-full grid-cols-2">
+                  <div className="inline-flex h-10 items-center justify-center rounded-md bg-blue-50 p-1 text-gray-500  w-full grid-cols-2">
                     <button
                       className={`inline-flex w-200 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
                         activeTab === "email"
